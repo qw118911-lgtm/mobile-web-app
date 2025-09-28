@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 移动端必需的viewport设置 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- 兼容IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 移动端优化 -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- PWA支持 -->
+    <meta name="theme-color" content="#667eea">
+    
+    <title>移动端优化应用</title>
+    
+    <style>
+        /* 重置样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* 基础样式 */
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* 容器样式 */
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        /* 卡片样式 */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            max-width: 400px;
+            width: 100%;
+            margin: 20px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        /* 标题样式 */
+        h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* 描述文字 */
+        .description {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            min-width: 120px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        /* 功能区域 */
+        .features {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 30px;
+            width: 100%;
+        }
+        
+        .feature-item {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .feature-item:active {
+            transform: scale(0.98);
+        }
+        
+        .feature-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .feature-desc {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        /* 移动端响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .card {
+                margin: 10px;
+                padding: 30px 20px;
+                border-radius: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .description {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+                width: 100%;
+                margin: 8px 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 25px 15px;
+                margin: 5px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 状态提示 */
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        /* 入场动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>📱 移动优化应用</h1>
+            <p class="description">
+                专为移动设备优化的Web应用<br>
+                支持所有主流手机浏览器
+            </p>
+            
+            <button class="btn" onclick="testFunction()">🚀 测试功能</button>
+            <button class="btn" onclick="showDeviceInfo()">📊 设备信息</button>
+            <button class="btn" onclick="testTouch()">👆 触摸测试</button>
+            
+            <div class="loading" id="loading"></div>
+            <div class="status" id="status"></div>
+            
+            <div class="features">
+                <div class="feature-item" onclick="showFeatureDetail('mobile')">
+                    <div class="feature-title">📱 移动端完美适配</div>
+                    <div class="feature-desc">响应式设计，完美适配各种屏幕尺寸</div>
+                </div>
+                
+                <div class="feature-item" onclick="showFeatureDetail('browser')">
+                    <div class="feature-title">🌐 全浏览器兼容</div>
+                    <div class="feature-desc">支持Chrome、Safari、Firefox、Edge等</div>
+                </div>
+                
+                <div class="feature-item" onclick="showFeatureDetail('performance')">
+                    <div class="feature-title">⚡ 性能优化</div>
+                    <div class="feature-desc">快速加载，流畅交互，节省流量</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * 测试功能函数
+         * 演示基本的交互功能和移动端兼容性
+         */
+        function testFunction() {
+            showLoading(true);
+            showStatus('正在测试移动端功能...', 'info');
+            
+            setTimeout(() => {
+                showLoading(false);
+                const touchSupport = 'ontouchstart' in window;
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                
+                const result = `✅ 移动端功能测试完成！
+
+触摸支持: ${touchSupport ? '✅ 支持' : '❌ 不支持'}
+设备类型: ${isMobile ? '移动设备' : '桌面设备'}
+屏幕尺寸: ${screen.width} × ${screen.height}
+窗口尺寸: ${window.innerWidth} × ${window.innerHeight}`;
+                
+                showStatus(result, 'success');
+            }, 2000);
+        }
+        
+        /**
+         * 显示设备信息函数
+         * 获取并显示当前设备的详细信息
+         */
+        function showDeviceInfo() {
+            let deviceType = '未知设备';
+            let browser = '未知浏览器';
+            
+            const ua = navigator.userAgent;
+            
+            // 检测设备类型
+            if (/Android/i.test(ua)) deviceType = 'Android设备';
+            else if (/iPhone/i.test(ua)) deviceType = 'iPhone';
+            else if (/iPad/i.test(ua)) deviceType = 'iPad';
+            else if (/Windows/i.test(ua)) deviceType = 'Windows设备';
+            else if (/Mac/i.test(ua)) deviceType = 'Mac设备';
+            
+            // 检测浏览器
+            if (/Chrome/i.test(ua) && !/Edge/i.test(ua)) browser = 'Chrome';
+            else if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) browser = 'Safari';
+            else if (/Firefox/i.test(ua)) browser = 'Firefox';
+            else if (/Edge/i.test(ua)) browser = 'Edge';
+            
+            const message = `📱 设备信息详情:
+
+🔧 设备类型: ${deviceType}
+🌐 浏览器: ${browser}
+📏 屏幕尺寸: ${screen.width} × ${screen.height}
+🖼️ 窗口尺寸: ${window.innerWidth} × ${window.innerHeight}
+🔍 像素比: ${window.devicePixelRatio || 1}
+🌍 语言: ${navigator.language}
+📶 在线状态: ${navigator.onLine ? '在线' : '离线'}`;
+            
+            showStatus(message, 'success');
+        }
+        
+        /**
+         * 触摸测试函数
+         * 测试移动端触摸交互功能
+         */
+        function testTouch() {
+            if ('ontouchstart' in window) {
+                showStatus('👆 触摸功能正常！请尝试点击按钮和滑动页面', 'success');
+            } else {
+                showStatus('❌ 当前设备不支持触摸功能', 'error');
+            }
+        }
+        
+        /**
+         * 显示功能详情
+         * @param {string} feature - 功能类型
+         */
+        function showFeatureDetail(feature) {
+            const details = {
+                mobile: '📱 移动端优化特性:\n• 响应式布局设计\n• 触摸友好的交互\n• 适配各种屏幕尺寸\n• 优化的字体和间距',
+                browser: '🌐 浏览器兼容性:\n• Chrome (Android/iOS)\n• Safari (iOS)\n• Firefox Mobile\n• Edge Mobile\n• 微信内置浏览器',
+                performance: '⚡ 性能优化措施:\n• CSS3硬件加速\n• 代码压缩优化\n• 缓存策略\n• 减少HTTP请求'
+            };
+            
+            showStatus(details[feature] || '功能详情加载中...', 'info');
+        }
+        
+        /**
+         * 显示加载状态
+         * @param {boolean} show - 是否显示加载动画
+         */
+        function showLoading(show) {
+            const loading = document.getElementById('loading');
+            loading.style.display = show ? 'block' : 'none';
+        }
+        
+        /**
+         * 显示状态信息
+         * @param {string} message - 要显示的消息
+         * @param {string} type - 消息类型 ('success', 'error', 'info')
+         */
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.innerHTML = message.replace(/\n/g, '<br>');
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+            
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 5000);
+        }
+        
+        /**
+         * 页面加载完成后的初始化
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            // 防止双击缩放
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function (event) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+            
+            // 显示欢迎信息
+            setTimeout(() => {
+                const welcomeMsg = isMobile ? 
+                    '🎉 移动端应用加载完成！所有功能已针对手机优化' : 
+                    '💻 应用加载完成！建议在手机上访问以体验移动端功能';
+                showStatus(welcomeMsg, 'success');
+            }, 1000);
+        });
+        
+        /**
+         * 处理设备方向变化
+         */
+        window.addEventListener('orientationchange', function() {
+            setTimeout(() => {
+                const orientation = Math.abs(window.orientation) === 90 ? '横屏' : '竖屏';
+                showStatus(`🔄 设备方向已改变为${orientation}`, 'info');
+            }, 100);
+        });
+    </script>
+</body>
+</html>
